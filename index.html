@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ULTIMATE TRADING DASHBOARD PRO V5.5</title>
+
+<style>
+
+body{
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  font-size:14px;
+  padding:10px;
+}
+
+.topHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+h2{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+/* FEAR INDEX */
+
+.fearStatus{
+  min-width:250px;
+  padding:12px;
+  border-radius:14px;
+  text-align:center;
+  border:1px solid #1e293b;
+  font-weight:bold;
+  box-shadow:0 0 20px rgba(0,0,0,0.25);
+}
+
+.riskOn{
+  background:#052e16;
+  color:#22c55e;
+}
+
+.neutral{
+  background:#3f2a00;
+  color:#facc15;
+}
+
+.riskOff{
+  background:#450a0a;
+  color:#ef4444;
+}
+
+.fearLabel{
+  font-size:12px;
+  opacity:0.8;
+  margin-bottom:8px;
+}
+
+.gaugeWrap{
+  position:relative;
+  width:150px;
+  height:78px;
+  margin:auto;
+  overflow:hidden;
+}
+
+.gaugeHalf{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:
+  conic-gradient(
+    #22c55e 0deg 60deg,
+    #facc15 60deg 120deg,
+    #ef4444 120deg 180deg
+  );
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.gaugeInner{
+  width:118px;
+  height:118px;
+  background:#020617;
+  border-radius:50%;
+  position:absolute;
+  top:16px;
+  left:16px;
+}
+
+.gaugeNeedle{
+  position:absolute;
+  width:5px;
+  height:65px;
+  background:#38bdf8;
+  left:72px;
+  bottom:0;
+  transform-origin:bottom center;
+  transform:rotate(90deg);
+  border-radius:4px;
+  transition:transform 0.6s ease;
+  box-shadow:
+  0 0 10px #38bdf8,
+  0 0 20px rgba(56,189,248,0.7);
+}
+
+.gaugeCenter{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#38bdf8;
+  position:absolute;
+  left:67px;
+  bottom:-2px;
+}
+
+.fearValue{
+  margin-top:8px;
+  font-size:22px;
+  font-weight:bold;
+}
+
+/* BUTTONS */
+
+.topBar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+button{
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:14px;
+  color:white;
+}
+
+#refreshBtn{
+  background:#16a34a;
+}
+
+#exportBtn{
+  background:#2563eb;
+}
+
+#exportTextBtn{
+  background:#7c3aed;
+}
+
+/* MARKET MODE */
+
+.marketModeBar{
+  margin-top:12px;
+  margin-bottom:16px;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #1e293b;
+  background:#0f172a;
+}
+
+.marketModeTitle{
+  font-size:12px;
+  opacity:0.7;
+  margin-bottom:8px;
+}
+
+.marketModeValue{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.marketBull{
+  color:#22c55e;
+}
+
+.marketNeutral{
+  color:#facc15;
+}
+
+.marketBear{
+  color:#ef4444;
+}
+
+/* FEAR TREND */
+
+.fearTrendPanel{
+  margin-top:14px;
+  margin-bottom:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#0f172a;
+  border:1px solid #1e293b;
+}
+
+.fearTrendTitle{
+  font-size:12px;
+  opacity:0.7;
+  margin-bottom:8px;
+}
+
+.fearTrendValue{
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* BREADTH */
+
+.marketBreadthPanel{
+  margin-top:14px;
+  margin-bottom:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#0f172a;
+  border:1px solid #1e293b;
+}
+
+.marketBreadthTitle{
+  font-size:12px;
+  opacity:0.7;
+  margin-bottom:10px;
+}
+
+.breadthGrid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+
+.breadthCard{
+  background:#111827;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1e293b;
+}
+
+.breadthLabel{
+  font-size:12px;
+  opacity:0.7;
+  margin-bottom:6px;
+}
+
+.breadthValue{
+  font-size:24px;
+  font-weight:bold;
+}
+
+/* STATUS */
+
+#statusMsg{
+  margin-top:8px;
+  margin-bottom:8px;
+  color:#facc15;
+  font-weight:bold;
+}
+
+#lastUpdate{
+  margin-bottom:14px;
+  color:#94a3b8;
+}
+
+/* TABLE */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td{
+  padding:8px;
+  text-align:center;
+  font-size:14px;
+}
+
+th{
+  background:#0f172a;
+  position:sticky;
+  top:0;
+}
+
+.group{
+  background:#1e293b;
+  font-weight:bold;
+}
+
+.buy{
+  color:#22c55e;
+  font-weight:bold;
+}
+
+.sell{
+  color:#ef4444;
+  font-weight:bold;
+}
+
+.wait{
+  color:#facc15;
+  font-weight:bold;
+}
+
+.up{
+  color:#22c55e;
+}
+
+.down{
+  color:#ef4444;
+}
+
+.side{
+  color:#facc15;
+}
+
+.cool{
+  color:#22c55e;
+}
+
+.hot{
+  color:#facc15;
+}
+
+.extreme{
+  color:#ef4444;
+}
+
+.confA{
+  color:#22c55e;
+}
+
+.confB{
+  color:#facc15;
+}
+
+.confC{
+  color:#ef4444;
+}
+
+.volHigh{
+  color:#22c55e;
+}
+
+.volMid{
+  color:#facc15;
+}
+
+.volLow{
+  color:#ef4444;
+}
+
+.riskLow{
+  color:#22c55e;
+}
+
+.riskMid{
+  color:#facc15;
+}
+
+.riskHigh{
+  color:#ef4444;
+}
+
+.tag{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.tagLeader{
+  background:#14532d;
+  color:#86efac;
+}
+
+.tagMomentum{
+  background:#172554;
+  color:#93c5fd;
+}
+
+.tagWatch{
+  background:#3f2a00;
+  color:#fde68a;
+}
+
+.leaderRow{
+  background:rgba(34,197,94,0.08);
+}
+
+.momentumRow{
+  background:rgba(59,130,246,0.08);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topHeader">
+
+<h2>
+📊 ULTIMATE TRADING DASHBOARD PRO V5.5
+</h2>
+
+<div id="fearStatus" class="fearStatus neutral">
+
+<div class="fearLabel">
+MARKET FEAR INDEX
+</div>
+
+<div class="gaugeWrap">
+
+<div class="gaugeHalf"></div>
+
+<div class="gaugeInner"></div>
+
+<div id="gaugeNeedle" class="gaugeNeedle"></div>
+
+<div class="gaugeCenter"></div>
+
+</div>
+
+<div id="fearValue" class="fearValue">
+50
+</div>
+
+<div id="fearText">
+🟡 NEUTRAL
+</div>
+
+</div>
+
+</div>
+
+<div class="topBar">
+
+<button id="refreshBtn" onclick="load()">
+🔄 Refresh
+</button>
+
+<button id="exportBtn" onclick="exportCSV()">
+📥 Export CSV
+</button>
+
+<button id="exportTextBtn" onclick="exportText()">
+📝 Export Text
+</button>
+
+</div>
+
+<div class="marketModeBar">
+
+<div class="marketModeTitle">
+SMART MARKET MODE
+</div>
+
+<div id="marketModeValue"
+class="marketModeValue marketNeutral">
+🟡 BALANCED
+</div>
+
+</div>
+
+<div class="fearTrendPanel">
+
+<div class="fearTrendTitle">
+FEAR TREND ENGINE
+</div>
+
+<div id="fearTrendValue"
+class="fearTrendValue">
+🟡 STABLE
+</div>
+
+</div>
+
+<div class="marketBreadthPanel">
+
+<div class="marketBreadthTitle">
+MARKET BREADTH ENGINE
+</div>
+
+<div class="breadthGrid">
+
+<div class="breadthCard">
+<div class="breadthLabel">
+🟢 BULLISH COUNT
+</div>
+<div id="bullCount"
+class="breadthValue">
+0
+</div>
+</div>
+
+<div class="breadthCard">
+<div class="breadthLabel">
+🔴 BEARISH COUNT
+</div>
+<div id="bearCount"
+class="breadthValue">
+0
+</div>
+</div>
+
+<div class="breadthCard">
+<div class="breadthLabel">
+🔥 EXTREME HEAT
+</div>
+<div id="heatCount"
+class="breadthValue">
+0
+</div>
+</div>
+
+<div class="breadthCard">
+<div class="breadthLabel">
+🏆 LEADER COUNT
+</div>
+<div id="leaderCount"
+class="breadthValue">
+0
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div id="statusMsg"></div>
+
+<div id="lastUpdate"></div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Rank</th>
+<th>Symbol</th>
+<th>Leader Tag</th>
+<th>Signal</th>
+<th>Trend</th>
+<th>Action</th>
+<th>RSI</th>
+<th>Heat</th>
+<th>Confidence</th>
+<th>Smart Rank</th>
+<th>Volume</th>
+<th>Risk</th>
+<th>Score</th>
+<th>Price</th>
+<th>EMA20</th>
+<th>EMA50</th>
+<th>Momentum</th>
+<th>News</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tb"></tbody>
+
+</table>
+
+<script>
+
+let exportData = [];
+
+let smoothedFear = 50;
+
+let previousFear = 50;
+
+let fearHistory = [];
+
+const FEAR_EMA_ALPHA = 0.22;
+
+const groups = {
+
+"🚀 Growth":[
+"OKLO","APLD","NVTS","CRWV"
+],
+
+"💾 Memory":[
+"MU","WDC","STX"
+],
+
+"🧠 AI & Semi":[
+"AMD","TSM","ARM","AVGO","PLTR"
+],
+
+"🛰 Space":[
+"RKLB","ASTS","ONDS"
+]
+
+};
+
+function safeNumber(v,fallback=50){
+
+  const n = parseFloat(v);
+
+  if(isNaN(n)) return fallback;
+
+  if(!isFinite(n)) return fallback;
+
+  return n;
+
+}
+
+function applyFearEMA(rawFear){
+
+  rawFear =
+  safeNumber(rawFear,50);
+
+  smoothedFear =
+  (
+    smoothedFear *
+    (1 - FEAR_EMA_ALPHA)
+  ) +
+  (
+    rawFear *
+    FEAR_EMA_ALPHA
+  );
+
+  return smoothedFear;
+
+}
+
+function limitFearMove(value){
+
+  let maxStep = 6;
+
+  if(value > previousFear + maxStep){
+
+    value =
+    previousFear + maxStep;
+
+  }
+
+  if(value < previousFear - maxStep){
+
+    value =
+    previousFear - maxStep;
+
+  }
+
+  previousFear = value;
+
+  return value;
+
+}
+
+function updateFearTrend(currentFear){
+
+  fearHistory.push(currentFear);
+
+  if(fearHistory.length > 5){
+
+    fearHistory.shift();
+
+  }
+
+  if(fearHistory.length < 2){
+
+    return {
+      text:"🟡 STABLE",
+      cls:"marketNeutral"
+    };
+
+  }
+
+  let first =
+  fearHistory[0];
+
+  let last =
+  fearHistory[
+    fearHistory.length - 1
+  ];
+
+  let diff =
+  last - first;
+
+  if(diff >= 8){
+
+    return {
+      text:"🟢 RISK EXPANDING",
+      cls:"marketBull"
+    };
+
+  }
+
+  if(diff <= -8){
+
+    return {
+      text:"🔴 RISK FALLING",
+      cls:"marketBear"
+    };
+
+  }
+
+  return {
+    text:"🟡 STABLE",
+    cls:"marketNeutral"
+  };
+
+}
+
+function calcRSI(prices, period=14){
+
+  if(!prices || prices.length < period + 1){
+    return 50;
+  }
+
+  let gains = 0;
+  let losses = 0;
+
+  for(let i=1;i<=period;i++){
+
+    let diff =
+    prices[i] - prices[i-1];
+
+    if(diff >= 0){
+      gains += diff;
+    }else{
+      losses -= diff;
+    }
+
+  }
+
+  let rs =
+  gains / (losses || 1);
+
+  return 100 - (100/(1+rs));
+
+}
+
+function getSession(){
+
+  const hour =
+  new Date().getHours();
+
+  if(hour < 9){
+    return "PREMARKET";
+  }
+
+  if(hour < 12){
+    return "OPEN";
+  }
+
+  if(hour < 15){
+    return "MIDDAY";
+  }
+
+  return "CLOSE";
+
+}
+
+async function fetchData(symbol){
+
+  try{
+
+    const base =
+`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=10d&interval=1h`;
+
+    const url =
+"https://api.allorigins.win/raw?url="
++ encodeURIComponent(base);
+
+    const res = await fetch(url);
+
+    const data = await res.json();
+
+    const result =
+    data?.chart?.result?.[0];
+
+    let prices =
+    result?.indicators?.quote?.[0]
+    ?.close?.filter(v=>v);
+
+    let volumes =
+    result?.indicators?.quote?.[0]
+    ?.volume?.filter(v=>v);
+
+    if(!prices || prices.length < 55){
+      return null;
+    }
+
+    function ema(period){
+
+      let k = 2 / (period + 1);
+
+      let e = [prices[0]];
+
+      for(let i=1;i<prices.length;i++){
+
+        e.push(
+          prices[i]*k +
+          e[i-1]*(1-k)
+        );
+
+      }
+
+      return e[e.length-1];
+
+    }
+
+    let price = prices.at(-1);
+
+    let ema20 = ema(20);
+
+    let ema50 = ema(50);
+
+    let rsi =
+    calcRSI(prices.slice(-15));
+
+    let avgVol =
+    volumes.slice(-20)
+    .reduce((a,b)=>a+b,0)
+    / 20;
+
+    let currentVol =
+    volumes.at(-1);
+
+    let volRatio =
+    currentVol / (avgVol || 1);
+
+    let score = 0;
+
+    if(price > ema20) score += 2;
+    if(ema20 > ema50) score += 2;
+    if(price > ema50) score += 2;
+    if(rsi > 50 && rsi < 70) score += 1;
+    if(volRatio >= 1.5) score += 1;
+
+    let trend = "🟡 SIDE";
+    let trendCls = "side";
+
+    if(price > ema50){
+
+      trend = "🟢 UP";
+      trendCls = "up";
+
+    }
+
+    if(price < ema50){
+
+      trend = "🔴 DOWN";
+      trendCls = "down";
+
+    }
+
+    let heat = "🟢 COOL";
+    let heatCls = "cool";
+
+    if(rsi >= 65){
+
+      heat = "🟡 HOT";
+      heatCls = "hot";
+
+    }
+
+    if(rsi >= 80){
+
+      heat = "🔴 EXTREME";
+      heatCls = "extreme";
+
+    }
+
+    let confidence = "C";
+    let confidenceCls = "confC";
+
+    if(score >= 5){
+
+      confidence = "B";
+      confidenceCls = "confB";
+
+    }
+
+    if(score >= 7){
+
+      confidence = "A";
+      confidenceCls = "confA";
+
+    }
+
+    let smartRank = score;
+
+    let signal = "👁️";
+    let action = "WATCH";
+    let cls = "wait";
+
+    if(smartRank >= 7){
+
+      signal = "🟢";
+      action = "BUY";
+      cls = "buy";
+
+    }
+
+    if(rsi >= 80){
+
+      signal = "🔥";
+      action = "TAKE PROFIT";
+      cls = "wait";
+
+    }
+
+    let volText = "NORMAL";
+    let volCls = "volMid";
+
+    if(volRatio >= 1.5){
+
+      volText = "HIGH";
+      volCls = "volHigh";
+
+    }
+
+    if(volRatio < 0.8){
+
+      volText = "LOW";
+      volCls = "volLow";
+
+    }
+
+    let risk = "LOW";
+    let riskCls = "riskLow";
+
+    if(smartRank <= 5){
+
+      risk = "MEDIUM";
+      riskCls = "riskMid";
+
+    }
+
+    if(smartRank <= 3){
+
+      risk = "HIGH";
+      riskCls = "riskHigh";
+
+    }
+
+    let leaderTag =
+`
+<span class="tag tagWatch">
+👁️ WATCH
+</span>
+`;
+
+    let rowClass = "";
+
+    if(smartRank >= 7){
+
+      leaderTag =
+`
+<span class="tag tagLeader">
+🏆 LEADER
+</span>
+`;
+
+      rowClass = "leaderRow";
+
+    }
+
+    if(volRatio >= 1.8){
+
+      leaderTag =
+`
+<span class="tag tagMomentum">
+🚀 MOMENTUM
+</span>
+`;
+
+      rowClass = "momentumRow";
+
+    }
+
+    return {
+
+      symbol,
+      signal,
+      action,
+      cls,
+
+      trend,
+      trendCls,
+
+      rsi:rsi.toFixed(1),
+
+      heat,
+      heatCls,
+
+      confidence,
+      confidenceCls,
+
+      smartRank,
+
+      volText,
+      volCls,
+
+      risk,
+      riskCls,
+
+      score,
+
+      leaderTag,
+      rowClass,
+
+      price:price.toFixed(2),
+
+      ema20:ema20.toFixed(2),
+
+      ema50:ema50.toFixed(2),
+
+      momentum:
+      (
+        price > ema20 &&
+        ema20 > ema50
+      )
+      ? "🚀"
+      : "-",
+
+      news:"⚪"
+
+    };
+
+  }catch(err){
+
+    console.log(err);
+
+    return null;
+
+  }
+
+}
+
+async function load(){
+
+  exportData = [];
+
+  const btn =
+  document.getElementById(
+  "refreshBtn"
+  );
+
+  btn.disabled = true;
+
+  btn.innerHTML =
+  "⏳ Loading...";
+
+  document.getElementById(
+  "statusMsg"
+  ).innerHTML =
+  "⏳ Loading market data...";
+
+  let tb =
+  document.getElementById("tb");
+
+  tb.innerHTML = "";
+
+  let allResults = [];
+
+  for(let group in groups){
+
+    let results =
+    await Promise.all(
+    groups[group].map(
+    s => fetchData(s)
+    ));
+
+    results =
+    results.filter(x=>x)
+    .sort((a,b)=>
+    b.smartRank - a.smartRank
+    );
+
+    allResults.push(...results);
+
+    tb.innerHTML += `
+
+<tr class="group">
+<td colspan="18">
+${group}
+</td>
+</tr>
+
+`;
+
+    for(let i=0;i<results.length;i++){
+
+      let d = results[i];
+
+      const now =
+      new Date();
+
+      exportData.push({
+
+        date:
+        now.toISOString()
+        .split("T")[0],
+
+        time:
+        now.toLocaleTimeString(),
+
+        session:
+        getSession(),
+
+        group,
+
+        symbol:d.symbol,
+        signal:d.signal,
+        trend:d.trend,
+        action:d.action,
+        rsi:d.rsi,
+        heat:d.heat,
+        confidence:d.confidence,
+        smartRank:d.smartRank,
+        volume:d.volText,
+        risk:d.risk,
+        score:d.score,
+        price:d.price,
+        ema20:d.ema20,
+        ema50:d.ema50
+
+      });
+
+      tb.innerHTML += `
+
+<tr class="${d.rowClass}">
+
+<td>#${i+1}</td>
+
+<td>${d.symbol}</td>
+
+<td>${d.leaderTag}</td>
+
+<td style="font-size:20px;">
+${d.signal}
+</td>
+
+<td class="${d.trendCls}">
+${d.trend}
+</td>
+
+<td class="${d.cls}">
+${d.action}
+</td>
+
+<td>${d.rsi}</td>
+
+<td class="${d.heatCls}">
+${d.heat}
+</td>
+
+<td class="${d.confidenceCls}">
+${d.confidence}
+</td>
+
+<td>${d.smartRank}</td>
+
+<td class="${d.volCls}">
+${d.volText}
+</td>
+
+<td class="${d.riskCls}">
+${d.risk}
+</td>
+
+<td>${d.score}</td>
+
+<td>${d.price}</td>
+
+<td>${d.ema20}</td>
+
+<td>${d.ema50}</td>
+
+<td>${d.momentum}</td>
+
+<td>${d.news}</td>
+
+</tr>
+
+`;
+
+    }
+
+  }
+
+  let avgRank = 0;
+
+  allResults.forEach(x=>{
+    avgRank += x.smartRank;
+  });
+
+  avgRank =
+  avgRank / (allResults.length || 1);
+
+  let rawFear =
+  Math.round(
+  (avgRank / 10) * 100
+  );
+
+  rawFear =
+  Math.max(
+    0,
+    Math.min(100,rawFear)
+  );
+
+  let fearValue =
+  applyFearEMA(rawFear);
+
+  fearValue =
+  limitFearMove(fearValue);
+
+  fearValue =
+  Math.round(fearValue);
+
+  const trendData =
+  updateFearTrend(fearValue);
+
+  const trendBox =
+  document.getElementById(
+  "fearTrendValue"
+  );
+
+  trendBox.innerHTML =
+  trendData.text;
+
+  trendBox.className =
+  "fearTrendValue " +
+  trendData.cls;
+
+  const fearBox =
+  document.getElementById(
+  "fearStatus"
+  );
+
+  const fearText =
+  document.getElementById(
+  "fearText"
+  );
+
+  const fearValueText =
+  document.getElementById(
+  "fearValue"
+  );
+
+  const needle =
+  document.getElementById(
+  "gaugeNeedle"
+  );
+
+  let rotateDeg =
+  (fearValue / 100) * 180;
+
+  needle.style.transform =
+  `rotate(${rotateDeg}deg)`;
+
+  fearValueText.innerHTML =
+  fearValue;
+
+  fearBox.className =
+  "fearStatus neutral";
+
+  fearText.innerHTML =
+  "🟡 NEUTRAL";
+
+  let marketMode =
+  document.getElementById(
+  "marketModeValue"
+  );
+
+  marketMode.className =
+  "marketModeValue marketNeutral";
+
+  marketMode.innerHTML =
+  "🟡 BALANCED";
+
+  if(fearValue >= 70){
+
+    fearBox.className =
+    "fearStatus riskOn";
+
+    fearText.innerHTML =
+    "🟢 RISK ON";
+
+    marketMode.className =
+    "marketModeValue marketBull";
+
+    marketMode.innerHTML =
+    "🟢 MOMENTUM BULL";
+
+  }
+
+  if(fearValue <= 35){
+
+    fearBox.className =
+    "fearStatus riskOff";
+
+    fearText.innerHTML =
+    "🔴 RISK OFF";
+
+    marketMode.className =
+    "marketModeValue marketBear";
+
+    marketMode.innerHTML =
+    "🔴 DEFENSIVE";
+
+  }
+
+  let bullCount =
+  allResults.filter(
+  x => x.trend.includes("UP")
+  ).length;
+
+  let bearCount =
+  allResults.filter(
+  x => x.trend.includes("DOWN")
+  ).length;
+
+  let extremeCount =
+  allResults.filter(
+  x => x.heat.includes("EXTREME")
+  ).length;
+
+  let leaderCount =
+  allResults.filter(
+  x => x.smartRank >= 7
+  ).length;
+
+  document.getElementById(
+  "bullCount"
+  ).innerHTML =
+  bullCount;
+
+  document.getElementById(
+  "bearCount"
+  ).innerHTML =
+  bearCount;
+
+  document.getElementById(
+  "heatCount"
+  ).innerHTML =
+  extremeCount;
+
+  document.getElementById(
+  "leaderCount"
+  ).innerHTML =
+  leaderCount;
+
+  document.getElementById(
+  "lastUpdate"
+  ).innerHTML =
+  "Last Update: " +
+  new Date().toLocaleTimeString();
+
+  document.getElementById(
+  "statusMsg"
+  ).innerHTML =
+  "✅ Dashboard updated successfully";
+
+  btn.disabled = false;
+
+  btn.innerHTML =
+  "🔄 Refresh";
+
+}
+
+/* EXPORT CSV */
+
+function exportCSV(){
+
+  if(exportData.length === 0){
+
+    alert("No data");
+
+    return;
+
+  }
+
+  const headers = [
+
+"date",
+"time",
+"session",
+"group",
+"symbol",
+"signal",
+"trend",
+"action",
+"rsi",
+"heat",
+"confidence",
+"smartRank",
+"volume",
+"risk",
+"score",
+"price",
+"ema20",
+"ema50"
+
+  ];
+
+  let csv =
+  headers.join(",") + "\n";
+
+  exportData.forEach(d=>{
+
+    csv += [
+
+      d.date,
+      d.time,
+      d.session,
+      d.group,
+      d.symbol,
+      d.signal,
+      d.trend,
+      d.action,
+      d.rsi,
+      d.heat,
+      d.confidence,
+      d.smartRank,
+      d.volume,
+      d.risk,
+      d.score,
+      d.price,
+      d.ema20,
+      d.ema50
+
+    ].join(",") + "\n";
+
+  });
+
+  const blob =
+  new Blob([csv],{
+    type:"text/csv"
+  });
+
+  const url =
+  URL.createObjectURL(blob);
+
+  const a =
+  document.createElement("a");
+
+  a.href = url;
+
+  a.download =
+  "dashboard_export.csv";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+
+}
+
+/* EXPORT TEXT */
+
+function exportText(){
+
+  if(exportData.length === 0){
+
+    alert("No data");
+
+    return;
+
+  }
+
+  let text = "";
+
+  exportData.forEach((d,index)=>{
+
+    text +=
+`#${index+1}\n`;
+
+    text +=
+`Date: ${d.date}\n`;
+
+    text +=
+`Time: ${d.time}\n`;
+
+    text +=
+`Session: ${d.session}\n`;
+
+    text +=
+`Group: ${d.group}\n`;
+
+    text +=
+`Symbol: ${d.symbol}\n`;
+
+    text +=
+`Signal: ${d.signal}\n`;
+
+    text +=
+`Action: ${d.action}\n`;
+
+    text +=
+`Trend: ${d.trend}\n`;
+
+    text +=
+`RSI: ${d.rsi}\n`;
+
+    text +=
+`Heat: ${d.heat}\n`;
+
+    text +=
+`Confidence: ${d.confidence}\n`;
+
+    text +=
+`SmartRank: ${d.smartRank}\n`;
+
+    text +=
+`Volume: ${d.volume}\n`;
+
+    text +=
+`Risk: ${d.risk}\n`;
+
+    text +=
+`Score: ${d.score}\n`;
+
+    text +=
+`Price: ${d.price}\n`;
+
+    text +=
+`EMA20: ${d.ema20}\n`;
+
+    text +=
+`EMA50: ${d.ema50}\n`;
+
+    text +=
+`--------------------------\n\n`;
+
+  });
+
+  const blob =
+  new Blob([text],{
+    type:"text/plain"
+  });
+
+  const url =
+  URL.createObjectURL(blob);
+
+  const a =
+  document.createElement("a");
+
+  a.href = url;
+
+  a.download =
+  "dashboard_export.txt";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>
